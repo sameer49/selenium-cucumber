@@ -1,119 +1,29 @@
 require_relative 'methods/assertion_methods'
 
+def valid_locator_type? type
+  %w(id class css name xpath).include? type
+end
+
 #Page title checking
 Then(/^I see page title as "(.*?)"$/) do |title|
   	check_title(title)
 end
 
-#Check element text steps : positive test
+#Check element text steps
 
-#By ID
-Then(/^I should see text as "(.*?)" for element having id "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("id", actual_value, access_name, true)
+Then(/^I should\s*((?:not)?)\s+see text as "(.*?)" for element having (.+) "(.*?)"$/) do |present, value, type, access_name|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  check_element_text(type, value, access_name, present.empty?)
 end
 
-#By CLASS
-Then(/^I should see text as "(.*?)" for element having class "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("class", actual_value, access_name, true)
+# To check attribute value
+
+Then(/^I should\s*((?:not)?)\s+see attribute "(.*?)" having value "(.*?)" for element having (.+) "(.*?)"$/) do |present, name , value , type, access_name|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  check_element_attribute(type, name, value, access_name, present.empty?)
 end
 
-#By NAME
-Then(/^I should see text as "(.*?)" for element having name "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("name", actual_value, access_name, true)
-end
-
-#By XPATH
-Then(/^I should see text as "(.*?)" for element having xpath "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("xpath", actual_value, access_name, true)
-end
-
-#By CSS
-Then(/^I should see text as "(.*?)" for element having css "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("css", actual_value, access_name, true)
-end
-
-# check element text steps : negative test
-
-#By ID
-Then(/^I should not see text as "(.*?)" for element having id "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("id", actual_value, access_name, false)
-end
-
-#By CLASS
-Then(/^I should not see text as "(.*?)" for element having class "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("class", actual_value, access_name, false)
-end
-
-#By NAME
-Then(/^I should not see text as "(.*?)" for element having name "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("name", actual_value, access_name, false)
-end
-
-#By XPATH
-Then(/^I should not see text as "(.*?)" for element having xpath "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("xpath", actual_value, access_name, false)
-end
-
-#By CSS
-Then(/^I should not see text as "(.*?)" for element having css "(.*?)"$/) do |actual_value , access_name|
-  check_element_text("css", actual_value, access_name, false)
-end
-
-# To check attribute value - positive test
-
-#By ID
-Then(/^I should see attribute "(.*?)" having value "(.*?)" for element having id "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("id", attribute_name , attribute_value, access_name, true)
-end
-
-#By CLASS
-Then(/^I should see attribute "(.*?)" having value "(.*?)" for element having class "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("class", attribute_name , attribute_value, access_name, true)
-end
-
-#By NAME
-Then(/^I should see attribute "(.*?)" having value "(.*?)" for element having name "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("name", attribute_name , attribute_value, access_name, true)
-end
-
-#By XPATH
-Then(/^I should see attribute "(.*?)" having value "(.*?)" for element having xpath "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("xpath", attribute_name , attribute_value, access_name, true)
-end
-
-#By CSS
-Then(/^I should see attribute "(.*?)" having value "(.*?)" for element having css "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("css", attribute_name , attribute_value, access_name, true)
-end
-
-# To check attribute value - negative test
-
-#By ID
-Then(/^I should not see attribute "(.*?)" having value "(.*?)" for element having id "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("id", attribute_name , attribute_value, access_name, false)
-end
-
-#By CLASS
-Then(/^I should not see attribute "(.*?)" having value "(.*?)" for element having class "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("class", attribute_name , attribute_value, access_name, false)
-end
-
-#By NAME
-Then(/^I should not see attribute "(.*?)" having value "(.*?)" for element having name "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("name", attribute_name , attribute_value, access_name, false)
-end
-
-#By XPATH
-Then(/^I should not see attribute "(.*?)" having value "(.*?)" for element having xpath "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("xpath", attribute_name , attribute_value, access_name, false)
-end
-
-#By CSS
-Then(/^I should not see attribute "(.*?)" having value "(.*?)" for element having css "(.*?)"$/) do |attribute_name , attribute_value , access_name|
-  check_element_attribute("css", attribute_name , attribute_value, access_name, false)
-end
-
-#Element enabled checking - Positive test
+#Element enabled checking
 #By ID
 Then(/^element having id "([^\"]*)" should enable$/) do |access_name|
   	check_element_enable("id", access_name, true)
