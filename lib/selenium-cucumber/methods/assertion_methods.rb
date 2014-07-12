@@ -144,7 +144,7 @@ end
 #method to assert option from radio button group is selected
 def is_option_from_radio_button_group_selected(access_type, by, option, access_name, should_be_selected=true)
 	radio_button_group = WAIT.until{$driver.find_elements(:"#{access_type}" => "#{access_name}")}
-  getter = (rb, by) -> { by == 'value' ? rb.attribute('value') : rb.text }	
+  getter = -> (rb, by) { by == 'value' ? rb.attribute('value') : rb.text }	
   ele = radio_button_group.find { |rb| getter.call(rb, by) == option }
   if !ele.selected && should_be_selected
     raise 'Radio button is not selected'
