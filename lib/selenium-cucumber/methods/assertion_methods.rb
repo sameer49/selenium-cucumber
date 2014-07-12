@@ -103,11 +103,13 @@ def check_element_presence(access_type, access_name, test_case)
 end
 
 #method to assert checkbox check
-def is_checkbox_checked(access_type, access_name)
+def is_checkbox_checked(access_type, access_name, should_be_checked=true)
 	checkbox = WAIT.until{$driver.find_element(:"#{access_type}" => "#{access_name}")}
 	
-	if !checkbox.selected?
+	if !checkbox.selected? && should_be_checked
 		raise "Checkbox not checked"
+  elsif checkbox.selected? && !should_be_checked
+    raise "Checkbox is checked"
 	end
 end
 
@@ -121,11 +123,12 @@ def is_checkbox_unchecked(access_type, access_name)
 end
 
 #method to assert checkbox check
-def is_radio_button_selected(access_type, access_name)
+def is_radio_button_selected(access_type, access_name, should_be_selected=true)
 	radio_button = WAIT.until{$driver.find_element(:"#{access_type}" => "#{access_name}")}
-	
-	if !radio_button.selected?
-		raise "Radio button is not selected"
+  if !radio_button.selected? && should_be_selected
+		raise "Radio Button not selected"
+  elsif radio_button.selected? && !should_be_selected
+    raise "Radio Button is selected"
 	end
 end
 
@@ -140,32 +143,15 @@ end
 
 
 #method to assert option from radio button group is selected
-def is_option_from_radio_button_group_selected(access_type, by, option, access_name)
+def is_option_from_radio_button_group_selected(access_type, by, option, access_name, should_be_selected=true)
 	radio_button_group = WAIT.until{$driver.find_elements(:"#{access_type}" => "#{access_name}")}
-	
-  	i=0
-  	
-  	if by=="value"
-  		while i<radio_button_group.length
-  			if radio_button_group[i].attribute("value")==option
-  				if !radio_button_group[i].selected?
-  					raise "Radio button is not selected"
-  				end
-  				break
-  			end
-  			i=i+1
-  		end
-  	else
-  		while i<radio_button_group.length
-  			if radio_button_group[i].text==option
-  				if !radio_button_group[i].selected?
-  					raise "Radio button is not selected"
-  				end
-  				break
-  			end
-  			i=i+1
-  		end  		  	
-  	end
+  getter = (rb, by) -> { by == 'value' ? rb.attribute('value') : rb.text }	
+  ele = radio_button_group.find { |rb| getter.call(rb, by) == option }
+  if !ele.selected && should_be_selected
+    raise 'Radio button is not selected'
+  elsif ele.selected && !should_be_selected
+    raise 'Radio button is selected'
+  end
 end
 
 #method to assert option from radio button group is not selected

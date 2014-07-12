@@ -24,308 +24,44 @@ Then(/^I should\s*((?:not)?)\s+see attribute "(.*?)" having value "(.*?)" for el
 end
 
 #Element enabled checking
-#By ID
-Then(/^element having id "([^\"]*)" should enable$/) do |access_name|
-  	check_element_enable("id", access_name, true)
-end
-
-#By NAME
-Then(/^element having name "([^\"]*)" should enable$/) do |access_name|
-  	check_element_enable("name", access_name, true)
-end
-
-#By CLASS
-Then(/^element having class "([^\"]*)" should enable$/) do |access_name|
-    check_element_enable("class", access_name, true)
-end
-
-#By XPATH
-Then(/^element having xpath "([^\"]*)" should enable$/) do |access_name|
-  	check_element_enable("xpath", access_name, true)
-end
-
-#By CSS
-Then(/^element having css "([^\"]*)" should enable$/) do |access_name|
-    check_element_enable("css", access_name, true)
+Then(/^element having (.+) "([^\"]*)" should\s*((?:not)?)\s+be (enable|disabled)$/) do |type, access_name, present, state|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  flag = state == "enabled"
+  flag = !flag unless present.empty?
+  check_element_enable(type, access_name, flag)
 end
 
 
-#Element disabled checking - Negative test
-#By ID
-Then(/^element having id "([^\"]*)" should disable$/) do |access_name|
-  	check_element_enable("id", access_name, false)
-end
-
-#By NAME
-Then (/^element having name "([^\"]*)" should disable$/) do |access_name|
-  	check_element_enable("name", access_name, false)
-end
-
-#By CLASS
-Then (/^element having class "([^\"]*)" should disable$/) do |access_name|
-    check_element_enable("class", access_name, false)
-end
-
-#By XPATH
-Then (/^element having xpath "([^\"]*)" should disable$/) do |access_name|
-  	check_element_enable("xpath", access_name, false)
-end
-
-#By CSS
-Then (/^element having css "([^\"]*)" should disable$/) do |access_name|
-    check_element_enable("css", access_name, false)
-end
-
-#element presence - positive test
-Then(/^I should see element present having id "(.*?)"$/) do |access_name|
-    check_element_presence("id", access_name, true)
-end
-
-Then(/^I should see element present having name "(.*?)"$/) do |access_name|
-    check_element_presence("name", access_name, true)
-end
-
-Then(/^I should see element present having class "(.*?)"$/) do |access_name|
-    check_element_presence("class", access_name, true)
-end
-
-Then(/^I should see element present having xpath "(.*?)"$/) do |access_name|
-    check_element_presence("xpath", access_name, true)
-end
-
-Then(/^I should see element present having css "(.*?)"$/) do |access_name|
-    check_element_presence("css", access_name, true)
-end
-
-#element presence - negative test
-
-Then(/^I should not see element present having id "(.*?)"$/) do |access_name|
-    check_element_presence("id", access_name, false)
-end
-
-Then(/^I should not see element present having name "(.*?)"$/) do |access_name|
-    check_element_presence("name", access_name, false)
-end
-
-Then(/^I should not see element present having class "(.*?)"$/) do |access_name|
-    check_element_presence("class", access_name, false)
-end
-
-Then(/^I should not see element present having xpath "(.*?)"$/) do |access_name|
-    check_element_presence("xpath", access_name, false)
-end
-
-Then(/^I should not see element present having css "(.*?)"$/) do |access_name|
-    check_element_presence("css", access_name, false)
+#element presence
+Then(/^I should\s*((?:not)?)\s+see element present having (.+) "(.*?)"$/) do |present, type, access_name|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  check_element_presence(type, access_name, present.empty?)
 end
 
 
 #assert check box is checked
-#By ID
-Then(/^I should see checkbox having id "(.*?)" checked$/) do |access_name|
-  is_checkbox_checked("id",access_name)
-end
-
-#By NAME
-Then(/^I should see checkbox having name "(.*?)" checked$/) do |access_name|
-  is_checkbox_checked("name",access_name)
-end
-
-#By CLASS
-Then(/^I should see checkbox having class "(.*?)" checked$/) do |access_name|
-  is_checkbox_checked("class",access_name)
-end
-
-#By XPATH
-Then(/^I should see checkbox having xpath "(.*?)" checked$/) do |access_name|
-  is_checkbox_checked("xpath",access_name)
-end
-
-#By CSS
-Then(/^I should see checkbox having css "(.*?)" checked$/) do |access_name|
-  is_checkbox_checked("css",access_name)
-end
-
-#assert check box is unchecked
-#By ID
-Then(/^I should see checkbox having id "(.*?)" unchecked$/) do |access_name|
-  is_checkbox_unchecked("id",access_name)
-end
-
-#By NAME
-Then(/^I should see checkbox having name "(.*?)" unchecked$/) do |access_name|
-  is_checkbox_unchecked("name",access_name)
-end
-
-#By CLASS
-Then(/^I should see checkbox having class "(.*?)" unchecked$/) do |access_name|
-  is_checkbox_unchecked("class",access_name)
-end
-
-#By XPATH
-Then(/^I should see checkbox having xpath "(.*?)" unchecked$/) do |access_name|
-  is_checkbox_unchecked("xpath",access_name)
-end
-
-#By CSS
-Then(/^I should see checkbox having css "(.*?)" unchecked$/) do |access_name|
-  is_checkbox_unchecked("css",access_name)
+Then(/^I should\s*((?:not)?)\s+see checkbox having (.+) "(.*?)" (checked|unchecked)$/) do |present, type, access_name, state|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  flag = state == "checked"
+  flag = !flag unless present.empty?
+  is_checkbox_checked(type, access_name, flag)
 end
 
 #steps to assert radio button checked
-#By ID
-Then(/^I should see radio button having id "(.*?)" selected$/) do |access_name|
-  is_radio_button_selected("id",access_name)
+Then(/^I should\s*((?:not)?)\s+see radio button having (.+) "(.*?)" (selected|unselected)$/) do |present, type, access_name, state|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  flag = state == "checked"
+  flag = !flag unless present.empty?
+  is_radio_button_selected(type, access_name, flag)
 end
 
-#By NAME
-Then(/^I should see radio button having name "(.*?)" selected$/) do |access_name|
-  is_radio_button_selected("name",access_name)
-end
-
-#By CLASS
-Then(/^I should see radio button having class "(.*?)" selected$/) do |access_name|
-  is_radio_button_selected("class",access_name)
-end
-
-#By XPATH
-Then(/^I should see radio button having xpath "(.*?)" selected$/) do |access_name|
-  is_radio_button_selected("xpath",access_name)
-end
-
-#By CSS
-Then(/^I should see radio button having css "(.*?)" selected$/) do |access_name|
-  is_radio_button_selected("css",access_name)
-end
-
-#steps to assert radio button checked
-#By ID
-Then(/^I should see radio button having id "(.*?)" not selected$/) do |access_name|
-  is_radio_button_unselected("id",access_name)
-end
-
-#By NAME
-Then(/^I should see radio button having name "(.*?)" not selected$/) do |access_name|
-  is_radio_button_unselected("name",access_name)
-end
-
-#By CLASS
-Then(/^I should see radio button having class "(.*?)" not selected$/) do |access_name|
-  is_radio_button_unselected("class",access_name)
-end
-
-#By XPATH
-Then(/^I should see radio button having xpath "(.*?)" not selected$/) do |access_name|
-  is_radio_button_unselected("xpath",access_name)
-end
-
-#By CSS
-Then(/^I should see radio button having css "(.*?)" not selected$/) do |access_name|
-  is_radio_button_unselected("css",access_name)
-end
 
 #steps to assert option by text from radio button group selected
-#By ID
-Then(/^I should see "(.*?)" option by text from radio button group having id "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("id","text",option,access_name)
-end
-
-#By NAME
-Then(/^I should see "(.*?)" option by text from radio button group having name "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("name","text",option,access_name)
-end
-
-#By CLASS
-Then(/^I should see "(.*?)" option by text from radio button group having class "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("class","text",option,access_name)
-end
-
-#By XPATH
-Then(/^I should see "(.*?)" option by text from radio button group having xpath "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("xpath","text",option,access_name)
-end
-
-#By CSS
-Then(/^I should see "(.*?)" option by text from radio button group having css "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("css","text",option,access_name)
-end
-
-#steps to assert option by value from radio button group selected
-#By ID
-Then(/^I should see "(.*?)" option by value from radio button group having id "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("id","value",option,access_name)
-end
-
-#By NAME
-Then(/^I should see "(.*?)" option by value from radio button group having name "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("name","value",option,access_name)
-end
-
-#By CLASS
-Then(/^I should see "(.*?)" option by value from radio button group having class "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("class","value",option,access_name)
-end
-
-#By XPATH
-Then(/^I should see "(.*?)" option by value from radio button group having xpath "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("xpath","value",option,access_name)
-end
-
-#By CSS
-Then(/^I should see "(.*?)" option by value from radio button group having css "(.*?)" selected$/) do |option, access_name|
-  is_option_from_radio_button_group_selected("css","value",option,access_name)
-end
-
-#steps to assert option by text from radio button group not selected
-#By ID
-Then(/^I should see "(.*?)" option by text from radio button group having id "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("id","text",option,access_name)
-end
-
-#By NAME
-Then(/^I should see "(.*?)" option by text from radio button group having name "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("name","text",option,access_name)
-end
-
-#By CLASS
-Then(/^I should see "(.*?)" option by text from radio button group having class "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("class","text",option,access_name)
-end
-
-#By XPATH
-Then(/^I should see "(.*?)" option by text from radio button group having xpath "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("xpath","text",option,access_name)
-end
-
-#By CSS
-Then(/^I should see "(.*?)" option by text from radio button group having css "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("css","text",option,access_name)
-end
-
-#steps to assert option by value from radio button group not selected
-#By ID
-Then(/^I should see "(.*?)" option by value from radio button group having id "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("id","value",option,access_name)
-end
-
-#By NAME
-Then(/^I should see "(.*?)" option by value from radio button group having name "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("name","value",option,access_name)
-end
-
-#By CLASS
-Then(/^I should see "(.*?)" option by value from radio button group having class "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("class","value",option,access_name)
-end
-
-#By XPATH
-Then(/^I should see "(.*?)" option by value from radio button group having xpath "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("xpath","value",option,access_name)
-end
-
-#By CSS
-Then(/^I should see "(.*?)" option by value from radio button group having css "(.*?)" not selected$/) do |option, access_name|
-  is_option_from_radio_button_group_not_selected("css","value",option,access_name)
+Then(/^I should\s*((?:not)?)\s+see "(.*?)" option by (.+) from radio button group having (.+) "(.*?)" (selected|unselected)$/) do |present, option, attr, access_name, type, state|
+  raise "Invalid locator type - #{type}" unless valid_locator_type? type
+  flag = state == "selected"
+  flag = !flag unless present.empty?
+  is_option_from_radio_button_group_selected(type, attr, option, access_name, flag)
 end
 
 #steps to check link presence
