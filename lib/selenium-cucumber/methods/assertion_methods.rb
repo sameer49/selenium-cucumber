@@ -14,7 +14,6 @@ end
 
 #method to get element text
 def get_element_text(access_type,access_name)	
-  $stderr.puts "Checking for #{access_type} -> #{access_name}"
 	return WAIT.until {$driver.find_element(:"#{access_type}" => "#{access_name}")}.text
 end
 
@@ -88,11 +87,11 @@ def check_element_presence(access_type, access_name, test_case)
 		if !result
 			raise "Excpetion : Element Not Present"
 		else
-			puts $driver.find_element(:"#{access_type}" => "#{access_name}").text
+			$stderr.puts $driver.find_element(:"#{access_type}" => "#{access_name}").text
 		end
 	else
 		begin
-			puts $driver.find_element(:"#{access_type}" => "#{access_name}").text
+			$stderr.puts $driver.find_element(:"#{access_type}" => "#{access_name}").text
 			raise "present"
 		rescue Exception => e
 			if e.message=="present"
