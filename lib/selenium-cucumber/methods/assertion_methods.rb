@@ -14,6 +14,7 @@ end
 
 #method to get element text
 def get_element_text(access_type,access_name)	
+  $stderr.puts "Checking for #{access_type} -> #{access_name}"
 	return WAIT.until {$driver.find_element(:"#{access_type}" => "#{access_name}")}.text
 end
 
@@ -54,14 +55,14 @@ def check_element_enable(access_type, access_name, test_case)
 end
 
 #method to get attribute value
-def get_element_attribute(access_type,access_name,attribute_value)
+def get_element_attribute(access_type,access_name,attribute_name)
 	return WAIT.until{$driver.find_element(:"#{access_type}" => "#{access_name}")}.attribute("#{attribute_name}")
 end
 
 #method to check attribute value
-def check_element_attribute(access_type, attribute_name , attribute_value, access_name, test_case)
+def check_element_attribute(access_type, attribute_name, attribute_value, access_name, test_case)
 	
-	attr_val=get_element_attribute(access_type,access_name,attribute_value)
+	attr_val=get_element_attribute(access_type, access_name, attribute_name)
 	
 	if test_case
 		if(attr_val!=attribute_value)	
